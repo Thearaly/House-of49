@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "House-of49.slnx"
+    "dotnet.defaultSolution": "House of49.slnx"
 }
