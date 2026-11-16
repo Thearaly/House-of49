@@ -74,7 +74,27 @@ The player must explore House of 49 and find the hidden key before the countdown
 The game is currently under development. The key collection and exploration mechanics are being implemented. Additional features may be added in future updates.
 
 ---
+Future Improvement
+-add some scene to represent the mission to play
+-complete Rock paper scissor game
+-complete the UI win lose screen
+-game instruction high and show
+-for final project progression
+
+Technologies Use
+-Unity (version 6000.3.8f1)
+-Git and Github
+-gitHub desktop
+-VS code
+
+Asset Import link
+-mini chibi (for player object design)
+-response for student (package import)
+
+-Submission: https://github.com/Thearaly/House-of49.git
+-compile link: 
+-
 
 Thank you for playing **House of 49**!
 
-https://github.com/Thearaly/House-of49.git
+
