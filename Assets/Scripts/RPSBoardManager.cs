@@ -25,17 +25,19 @@ public class RPSBoardManager : MonoBehaviour
     public TMP_Text rollsText;
     public TMP_Text resultText;
 
-    int score;
-    int rollsUsed;
-    bool roundActive;
-    int stepsRemaining;
-    bool moveInProgress;
+    private int score;
+    private int rollsUsed;
+    private bool roundActive;
+    private int stepsRemaining;
+    private bool moveInProgress;
+    private bool waitingForDice;
 
     void Start()
     {
         UpdateUI();
     }
 
+    // Called when the player clicks the dice.
     public void RollDice()
     {
         if (GameManager.Instance != null &&
@@ -44,18 +46,47 @@ public class RPSBoardManager : MonoBehaviour
 
         if (score >= pointsToGetKey ||
             roundActive ||
+            waitingForDice ||
             rollsUsed >= maximumRolls ||
             moveInProgress)
             return;
 
-        stepsRemaining = diceRoller.Roll();
+        if (diceRoller == null)
+        {
+            Debug.LogError("DiceRoller is not assigned!");
+            return;
+        }
+
+        waitingForDice = true;
+
+        if (resultText != null)
+            resultText.text = "Rolling dice...";
+
+        diceRoller.Roll(OnDiceRollCompleted);
+    }
+
+    // Receives the actual number after the dice stops.
+    void OnDiceRollCompleted(int result)
+    {
+        waitingForDice = false;
+
+        if (result <= 0)
+        {
+            if (resultText != null)
+                resultText.text = "Dice roll failed. Try again.";
+
+            return;
+        }
+
+        stepsRemaining = result;
         rollsUsed++;
         roundActive = true;
 
         if (resultText != null)
         {
             resultText.text =
-                "Rolled " + stepsRemaining + ". Move with WASD.";
+                "Rolled " + stepsRemaining +
+                ". Move with WASD.";
         }
 
         UpdateUI();
@@ -92,7 +123,6 @@ public class RPSBoardManager : MonoBehaviour
     void OnCubeMoveCompleted()
     {
         moveInProgress = false;
-
         stepsRemaining--;
 
         if (stepsRemaining == 0)
@@ -136,7 +166,8 @@ public class RPSBoardManager : MonoBehaviour
             if (resultText != null)
             {
                 resultText.text =
-                    cubeSymbol + " beats " + cellSymbol + "! +1 point.";
+                    cubeSymbol + " beats " + cellSymbol +
+                    "! +1 point.";
             }
         }
         else if (cubeSymbol == cellSymbol)
@@ -149,7 +180,8 @@ public class RPSBoardManager : MonoBehaviour
             if (resultText != null)
             {
                 resultText.text =
-                    cellSymbol + " beats " + cubeSymbol + ". No point.";
+                    cellSymbol + " beats " + cubeSymbol +
+                    ". No point.";
             }
         }
 
@@ -205,6 +237,7 @@ public class RPSBoardManager : MonoBehaviour
         roundActive = false;
         stepsRemaining = 0;
         moveInProgress = false;
+        waitingForDice = false;
 
         UpdateUI();
     }
